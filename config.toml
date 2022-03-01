@@ -1,0 +1,12 @@
+prod_vaults = [
+    "exampleVault"
+    ]
+
+non_prod_vaults = [
+    "exampleVault"
+]
+
+base_vault_url = "https://%+v.vault.azure.net"
+
+excluded_secrets = [
+]

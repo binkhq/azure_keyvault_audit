@@ -1,0 +1,29 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    
+jobs:
+  tests:
+    name: tests
+    runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v3.0.0
+        with:
+          go-version: "1.17"
+      - run: go get
+      - run: |
+            mkdir -p $HOME/.local/bin
+            wget https://static.snyk.io/cli/latest/snyk-linux -O $HOME/.local/bin/snyk
+            chmod +x $HOME/.local/bin/snyk
+            echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - run: snyk code test --org=secops-mwi --project-name=${{ github.event.repository.name }}
+      - run: snyk test --org=secops-mwi --project-name=${{ github.event.repository.name }}
+    
